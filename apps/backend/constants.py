@@ -18,3 +18,13 @@ HEADERS = {
     "Content-Type": "application/json",
     "Authorization": f"Bearer {OPENAI_API_KEY}"
 }
+
+# Define story sizes
+# Size in tokens: 100 tokens ~= 75 words
+from enum import Enum
+class StorySize(Enum):
+    HAIKU = 30
+    SUMMARY = 100
+    VERY_SHORT = 350
+    SHORT_STORY = 600
+    FULL_STORY = 2000

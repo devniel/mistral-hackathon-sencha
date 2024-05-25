@@ -9,14 +9,18 @@
     "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
     "@excalidraw/excalidraw": "^0.17.6",
     "@heroicons/react": "^2.1.3",
+    "@mui/material": "^5.15.18",
+    "@mui/material-nextjs": "^5.15.11",
     "@repo/ui": "*",
     "@tailwindcss/forms": "^0.5.7",
     "heroicons": "^2.1.3",
     "next": "^14.1.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.1.1",
@@ -26,6 +30,7 @@
     "@types/node": "^20.11.24",
     "@types/react": "^18.2.61",
     "@types/react-dom": "^18.2.19",
+    "@types/uuid": "^9.0.8",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.57.0",
     "postcss": "^8.4.38",
