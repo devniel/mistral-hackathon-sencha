@@ -24,7 +24,7 @@ HEADERS = {
 from enum import Enum
 class StorySize(Enum):
     HAIKU = 30
-    SUMMARY = 100
+    SUMMARY = 60
     VERY_SHORT = 350
     SHORT_STORY = 600
     FULL_STORY = 2000
