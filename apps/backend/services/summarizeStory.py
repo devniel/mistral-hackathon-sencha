@@ -9,24 +9,23 @@ def summarizeStory(text, summary_size=StorySize.SUMMARY):
     content = text
     temperature = 0.7
     max_tokens = summary_size.value
-    number_words = int(max_tokens * 3 / 4)
-    random_seed = random.randint(1, 10000)
+    number_words = int(max_tokens * 0.6)
+
     chat_response = client.chat(
         model=MISTRAL_MODEL,
         messages=[
             ChatMessage(
                 role="system",
-                content="""You're a storyteller pitching your story to have it chosen.""",
+                content="""You're a very gifted storyteller.""",
             ),
             ChatMessage(
                 role="user",
-                content=""""Summarize this story : {content} in {number_words}.""".format(
+                content="""You want your story : '''{content} ''' to win a contest. Create a summary or an excerpt of this story in less than {number_words} words. Make it captivating and intriguing without giving away spoilers. Focus on conveying the style, main conflict, and unique elements that make the story stand out. Ensure the summary entices readers to want to read the full story.""".format(
                     content=content, number_words=number_words
                 ),
             ),
         ],
         temperature=temperature,
-        random_seed=random_seed,
         max_tokens=max_tokens,
     )
     return chat_response.choices[0].message.content
