@@ -12,6 +12,7 @@ import {
   CardContent,
   Chip,
   CircularProgress,
+  Divider,
   FormControl,
   Grid,
   InputLabel,
@@ -29,6 +30,7 @@ import {
 import { WritingOptionsModal } from "./components/WritingOptionsModal";
 import { WrittingVariationsModal } from "./components/WritingVariationsModal";
 import { v4 as uuidv4 } from "uuid";
+import { AutoFixHigh, Info, InfoOutlined } from "@mui/icons-material";
 
 export default function Page() {
   const [openWrittingOptionsModal, setOpenWrittingOptionsModal] =
@@ -144,22 +146,72 @@ export default function Page() {
               {/** USED SETTINGS */}
               <Box>
                 <Box mb={2}>
-                  <Chip label="Prompt" size="small" />
-                  <Typography>{readStory?.promptText}</Typography>
+                  <Typography
+                    sx={{ fontSize: 14 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    prompt
+                  </Typography>
+                  <Typography sx={{ fontSize: 18 }}>
+                    {readStory?.promptText}
+                  </Typography>
                 </Box>
                 <Box mb={2}>
-                  <Chip label="Summary" size="small" />
-                  <Typography>{readStory?.summary}</Typography>
+                  <Typography
+                    sx={{ fontSize: 14 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    summary
+                  </Typography>
+                  <Typography sx={{ fontSize: 18 }}>
+                    {readStory?.summary}
+                  </Typography>
                 </Box>
                 <Box mb={2}>
-                  <Chip label="Total words" size="small" />
-                  <Typography>{readStory?.total_words}</Typography>
+                  <Typography
+                    sx={{ fontSize: 14 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    total words
+                  </Typography>
+                  <Typography sx={{ fontSize: 18 }}>
+                    {readStory?.total_words}
+                  </Typography>
                 </Box>
-                <Chip label="Temperature (500)" size="small" />
-                <Chip label="Audience (Kids)" size="small" />
+                <Box mb={2}>
+                  <Typography
+                    sx={{ fontSize: 14 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    genre
+                  </Typography>
+                  <Typography sx={{ fontSize: 18 }}>
+                    {readStory?.genre}
+                  </Typography>
+                </Box>
+                <Box mb={2}>
+                  <Typography
+                    sx={{ fontSize: 14 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    temperature
+                  </Typography>
+                  <Typography sx={{ fontSize: 18 }}>
+                    {readStory?.temperature}
+                  </Typography>
+                </Box>
               </Box>
               {/** NEW SETTINGS */}
               <Box>
+                <Typography color="text.primary" variant="button">
+                  VARY
+                </Typography>
+                <Divider variant="middle" sx= {{ mb: 1}}/>
                 <WrittingVariationsModal />
               </Box>
             </Grid>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Paper,
@@ -11,7 +11,7 @@ import {
   FormControl,
   Select,
   MenuItem,
-} from '@mui/material';
+} from "@mui/material";
 
 const storySizes = [
   { value: 0, label: "Haiku", enumValue: "HAIKU" },
@@ -26,9 +26,9 @@ export const WritingOptionsModal = ({ onChange }) => {
   const [storySize, setStorySize] = useState(storySizes[1].value);
   const [parameter3, setParameter3] = useState(50);
   const [switch1, setSwitch1] = useState(false);
-  const [tone, setTone] = useState('web');
+  const [tone, setTone] = useState("web");
   const [audience, setAudience] = useState(10);
-
+  const [genre, setGenre] = useState("fairy tale");
   const size = storySizes.find((size) => size.value === storySize).enumValue;
 
   const handleFormChange = () => {
@@ -39,13 +39,14 @@ export const WritingOptionsModal = ({ onChange }) => {
       switch1,
       tone,
       audience,
+      genre,
     };
     onChange(formValues);
   };
 
   useEffect(() => {
     handleFormChange();
-  }, [temperature, storySize, parameter3, switch1, tone, audience]);
+  }, [temperature, storySize, parameter3, switch1, tone, audience, genre]);
 
   return (
     <Paper elevation={1} className="mt-2 p-5">
@@ -177,6 +178,37 @@ export const WritingOptionsModal = ({ onChange }) => {
                       <MenuItem value={10}>Ten</MenuItem>
                       <MenuItem value={20}>Twenty</MenuItem>
                       <MenuItem value={30}>Thirty</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Box>
+            {/** GENRE */}
+            <Box>
+              <Grid container spacing={2}>
+                <Grid item sm={3}>
+                  <Typography>Genre</Typography>
+                </Grid>
+                <Grid item sm={9}>
+                  <FormControl fullWidth>
+                    <Select
+                      value={genre}
+                      onChange={(e) => setGenre(e.target.value)}
+                    >
+                      <MenuItem value={"fairy tale"}>Fairy tale</MenuItem>
+                      <MenuItem value={"folktale"}>Folktale</MenuItem>
+                      <MenuItem value={"adventure story"}>
+                        Adventure story
+                      </MenuItem>
+                      <MenuItem value={"humorous story"}>
+                        Humorous story
+                      </MenuItem>
+                      <MenuItem value={"mystery story"}>
+                        Mystery story
+                      </MenuItem>
+                      <MenuItem value={"futuristic story"}>
+                        Futuristic story
+                      </MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

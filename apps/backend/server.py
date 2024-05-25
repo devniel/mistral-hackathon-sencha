@@ -46,7 +46,8 @@ def sayHello():
         switch1 = data.get("switch1")
         tone = data.get("tone")
         audience = data.get("audience")
-        stories = createStories(promptText, samples, temperature, size=story_size)
+        genre = data.get("genre")
+        stories = createStories(promptText, samples, temperature, size=story_size, genre=genre)
         stories_with_summaries = []
         for story in stories:
             summary = summarizeStory(story, StorySize.SUMMARY)
@@ -62,7 +63,8 @@ def sayHello():
                     "parameter3": parameter3,
                     "switch1": switch1,
                     "tone": tone,
-                    "audience": audience
+                    "audience": audience,
+                    "genre": genre
                 }
             )
         return jsonify({"data": {"stories": stories_with_summaries}})
