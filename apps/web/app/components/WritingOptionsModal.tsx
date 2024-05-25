@@ -1,36 +1,51 @@
-"use client";
-
-import dynamic from "next/dynamic";
-import { useState } from "react";
-import { exportToBlob } from "@excalidraw/excalidraw";
-import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
+import React, { useState, useEffect } from 'react';
 import {
   Box,
-  Button,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
   Paper,
-  Select,
+  Typography,
+  Grid,
   Slider,
   Switch,
   ToggleButton,
   ToggleButtonGroup,
-  Typography,
-} from "@mui/material";
+  FormControl,
+  Select,
+  MenuItem,
+} from '@mui/material';
 
 const storySizes = [
-  { value: 0, label: 'Very Short', enumValue: 'VERY_SHORT' },
-  { value: 1, label: 'Short', enumValue: 'SHORT_STORY' },
-  { value: 2, label: 'Medium', enumValue: 'MEDIUM_STORY' },
-  { value: 3, label: 'Large', enumValue: 'FULL_STORY' },
+  { value: 0, label: "Haiku", enumValue: "HAIKU" },
+  { value: 1, label: "Very Short", enumValue: "SUMMARY" },
+  { value: 2, label: "Short", enumValue: "VERY_SHORT" },
+  { value: 3, label: "Medium", enumValue: "SHORT_SHORT" },
+  { value: 4, label: "Large", enumValue: "FULL_STORY" },
 ];
 
-
-export const WrittingOptionsModal = () => {
+export const WritingOptionsModal = ({ onChange }) => {
+  const [temperature, setTemperature] = useState(7);
   const [storySize, setStorySize] = useState(storySizes[1].value);
-  const size = storySizes.find(size => size.value === storySize).enumValue;
+  const [parameter3, setParameter3] = useState(50);
+  const [switch1, setSwitch1] = useState(false);
+  const [tone, setTone] = useState('web');
+  const [audience, setAudience] = useState(10);
+
+  const size = storySizes.find((size) => size.value === storySize).enumValue;
+
+  const handleFormChange = () => {
+    const formValues = {
+      temperature,
+      storySize,
+      parameter3,
+      switch1,
+      tone,
+      audience,
+    };
+    onChange(formValues);
+  };
+
+  useEffect(() => {
+    handleFormChange();
+  }, [temperature, storySize, parameter3, switch1, tone, audience]);
 
   return (
     <Paper elevation={1} className="mt-2 p-5">
@@ -53,9 +68,13 @@ export const WrittingOptionsModal = () => {
                 </Grid>
                 <Grid item sm={9}>
                   <Slider
-                    defaultValue={50}
-                    aria-label="Default"
+                    value={temperature}
+                    onChange={(e, newValue) => setTemperature(newValue)}
+                    aria-label="Temperature"
                     valueLabelDisplay="auto"
+                    step={1}
+                    min={0}
+                    max={10}
                   />
                 </Grid>
               </Grid>
@@ -63,7 +82,7 @@ export const WrittingOptionsModal = () => {
             <Box>
               <Grid container spacing={2}>
                 <Grid item sm={3}>
-                  <Typography>Parameter 2</Typography>
+                  <Typography>Size</Typography>
                 </Grid>
                 <Grid item sm={9}>
                   <Slider
@@ -72,7 +91,7 @@ export const WrittingOptionsModal = () => {
                     step={1}
                     marks={storySizes}
                     min={0}
-                    max={3}
+                    max={4}
                     valueLabelDisplay="auto"
                   />
                 </Grid>
@@ -85,9 +104,13 @@ export const WrittingOptionsModal = () => {
                 </Grid>
                 <Grid item sm={9}>
                   <Slider
-                    defaultValue={50}
-                    aria-label="Default"
+                    value={parameter3}
+                    onChange={(e, newValue) => setParameter3(newValue)}
+                    aria-label="Parameter 3"
                     valueLabelDisplay="auto"
+                    step={1}
+                    min={0}
+                    max={100}
                   />
                 </Grid>
               </Grid>
@@ -113,7 +136,10 @@ export const WrittingOptionsModal = () => {
                   <Typography>Switch 1</Typography>
                 </Grid>
                 <Grid item sm={9}>
-                  <Switch />
+                  <Switch
+                    checked={switch1}
+                    onChange={(e) => setSwitch1(e.target.checked)}
+                  />
                 </Grid>
               </Grid>
             </Box>
@@ -125,10 +151,10 @@ export const WrittingOptionsModal = () => {
                 <Grid item sm={9}>
                   <ToggleButtonGroup
                     color="primary"
-                    value="web"
+                    value={tone}
                     exclusive
-                    onChange={() => {}}
-                    aria-label="Platform"
+                    onChange={(e, newTone) => setTone(newTone)}
+                    aria-label="Tone"
                   >
                     <ToggleButton value="web">Web</ToggleButton>
                     <ToggleButton value="android">Android</ToggleButton>
@@ -145,11 +171,8 @@ export const WrittingOptionsModal = () => {
                 <Grid item sm={9}>
                   <FormControl fullWidth>
                     <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={10}
-                      label="Age"
-                      onChange={() => {}}
+                      value={audience}
+                      onChange={(e) => setAudience(e.target.value)}
                     >
                       <MenuItem value={10}>Ten</MenuItem>
                       <MenuItem value={20}>Twenty</MenuItem>

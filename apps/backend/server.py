@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from utils.utils import encodeImage
 from services import createStory, summarizeStory, createStories
-from constants import PORT_BACKEND, StorySize
+from constants import PORT_BACKEND, StorySize, story_size_mapper
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -17,9 +17,16 @@ logger = logging.getLogger(__name__)
 def sayHello():
     logger.info("Received request for /sayHello endpoint")
     try:
-        promptText = request.form.get("promptText")
-        samples = int(request.form.get("samples", 3))
-        stories = createStories(promptText, samples)
+        data = request.get_json()
+        promptText = data.get("promptText")
+        samples = int(data.get("samples", 3))
+        temperature = float(data.get("temperature", 0.7))/10
+        story_size = story_size_mapper.get(int(data.get("storySize", 1)), StorySize.SUMMARY)
+        parameter3 = data.get("parameter3")
+        switch1 = data.get("switch1")
+        tone = data.get("tone")
+        audience = data.get("audience")        
+        stories = createStories(promptText, samples, temperature, size=story_size)
         stories_with_summaries = []
         for story in stories:
             summary = summarizeStory(story, StorySize.SUMMARY)

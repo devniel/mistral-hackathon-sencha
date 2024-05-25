@@ -28,3 +28,11 @@ class StorySize(Enum):
     VERY_SHORT = 350
     SHORT_STORY = 600
     FULL_STORY = 2000
+
+story_size_mapper = {
+    0: StorySize.HAIKU,
+    1: StorySize.SUMMARY,
+    2: StorySize.VERY_SHORT,
+    3: StorySize.SHORT_STORY,
+    4: StorySize.FULL_STORY,
+}

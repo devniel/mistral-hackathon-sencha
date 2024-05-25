@@ -3,7 +3,6 @@ from mistralai.client import MistralClient
 from mistralai.models.chat_completion import ChatMessage
 from constants import MISTRAL_API_KEY, MISTRAL_MODEL, StorySize
 
-
 def summarizeStory(text, summary_size=StorySize.SUMMARY):
     client = MistralClient(api_key=MISTRAL_API_KEY)
     content = text

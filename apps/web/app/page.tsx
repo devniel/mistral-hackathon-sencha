@@ -22,8 +22,8 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import { WrittingOptionsModal } from "./components/WrittingOptionsModal";
-import { WrittingVariationsModal } from "./components/WrittingVariationsModal";
+import { WritingOptionsModal } from "./components/WritingOptionsModal";
+import { WrittingVariationsModal } from "./components/WritingVariationsModal";
 import { v4 as uuidv4 } from "uuid";
 
 
@@ -35,7 +35,7 @@ export default function Page() {
   const [promptText, setPromptText] = useState<string>();
 
   // Prompt settings
-  const [storySettings, setStorySettings] = useState();
+  const [storySettings, setStorySettings] = useState<Record<string, any>>();
 
   // Loading
   const [loading, setLoading] = useState<boolean>();
@@ -52,14 +52,20 @@ export default function Page() {
   // API Calls
   const sendInitialPrompt = async () => {
     const formData = new FormData();
-    formData.append("promptText", promptText);
+    //formData.append("promptText", promptText);
 
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/sayHello`,
         {
           method: "POST",
-          body: formData,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            promptText,
+            ...storySettings,
+          }),
         }
       );
 
@@ -82,6 +88,10 @@ export default function Page() {
     setLoading(true);
     sendInitialPrompt();
   };
+
+  const handleWritingOptionsChange = (formValues) => {
+    setStorySettings(formValues);
+  }
 
   if (loading) {
     return (
@@ -197,7 +207,7 @@ export default function Page() {
           setPromptText(e.target.value);
         }}
       ></textarea>
-      {openWrittingOptionsModal && <WrittingOptionsModal />}
+      {openWrittingOptionsModal && <WritingOptionsModal onChange={handleWritingOptionsChange} />}
     </Box>
   );
 }
