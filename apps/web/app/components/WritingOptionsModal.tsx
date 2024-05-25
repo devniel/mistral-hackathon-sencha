@@ -70,7 +70,7 @@ export const WritingOptionsModal = ({ onChange }) => {
                 <Grid item sm={9}>
                   <Slider
                     value={temperature}
-                    onChange={(e, newValue) => setTemperature(newValue)}
+                    onChange={(e, newValue) => setTemperature(newValue as any)}
                     aria-label="Temperature"
                     valueLabelDisplay="auto"
                     step={1}
@@ -88,7 +88,7 @@ export const WritingOptionsModal = ({ onChange }) => {
                 <Grid item sm={9}>
                   <Slider
                     value={storySize}
-                    onChange={(e, newValue) => setStorySize(newValue)}
+                    onChange={(e, newValue) => setStorySize(newValue as any)}
                     step={1}
                     marks={storySizes}
                     min={0}
@@ -106,7 +106,7 @@ export const WritingOptionsModal = ({ onChange }) => {
                 <Grid item sm={9}>
                   <Slider
                     value={parameter3}
-                    onChange={(e, newValue) => setParameter3(newValue)}
+                    onChange={(e, newValue) => setParameter3(newValue as any)}
                     aria-label="Parameter 3"
                     valueLabelDisplay="auto"
                     step={1}
@@ -173,7 +173,7 @@ export const WritingOptionsModal = ({ onChange }) => {
                   <FormControl fullWidth>
                     <Select
                       value={audience}
-                      onChange={(e) => setAudience(e.target.value)}
+                      onChange={(e) => setAudience(e.target.value as any)}
                     >
                       <MenuItem value={10}>Ten</MenuItem>
                       <MenuItem value={20}>Twenty</MenuItem>

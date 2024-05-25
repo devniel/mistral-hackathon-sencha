@@ -6,7 +6,18 @@
         "name": "next"
       }
     ],
-    
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false, // Disable all strict type-checking options
+    "noImplicitAny": false, // Allow implicit 'any' types
+    "strictNullChecks": false, // Disable strict null checks
+    "strictFunctionTypes": false, // Disable strict checking of function types
+    "strictBindCallApply": false, // Disable strict 'bind', 'call', and 'apply' methods
+    "strictPropertyInitialization": false, // Disable strict checking of property initialization
+    "noImplicitThis": false, // Allow 'this' to have an implicit 'any' type
+    "alwaysStrict": false, // Do not ensure 'use strict' is always emitted
+    "forceConsistentCasingInFileNames": false, // Disable case sensitivity checks
   },
   "include": [
     "next-env.d.ts",

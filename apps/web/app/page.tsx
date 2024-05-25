@@ -1,8 +1,6 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { ChangeEvent, useState } from "react";
-import { exportToBlob } from "@excalidraw/excalidraw";
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
 import {
   Box,
@@ -54,7 +52,7 @@ export default function Page() {
   // Stories
   const [stories, setStories] = useState([]);
 
-  const [readStory, setReadStory] = useState();
+  const [readStory, setReadStory] = useState(null);
 
   // API Calls
   const sendInitialPrompt = async () => {

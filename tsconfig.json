@@ -1,6 +1,3 @@
 {
-  "extends": "@repo/typescript-config/base.json",
-  "compilerOptions": {
-    "strict": false
-  }
+  "extends": "@repo/typescript-config/base.json"
 }
