@@ -22,7 +22,7 @@ import {
 
 export const WrittingVariationsModal = () => {
   return (
-    <Paper elevation={1} className="mt-2 p-5">
+    <Box className="mt-2 p-5">
       <Box display="flex" flexDirection="column" gap={2}>
         <Box>
           <Grid container spacing={2}>
@@ -151,6 +151,6 @@ export const WrittingVariationsModal = () => {
         </Box>
         */}
       </Box>
-    </Paper>
+    </Box>
   );
 };

@@ -102,6 +102,19 @@ export default function Page() {
     setReadStory(story);
   };
 
+  const style = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "80%",
+    bgcolor: "background.paper",
+    border: "0px solid #000",
+    borderRadius: "10px",
+    boxShadow: 24,
+    p: 4,
+  };
+
   return (
     <>
       <Modal
@@ -112,46 +125,46 @@ export default function Page() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Grid container spacing={2}>
-          {/* ROW 1 */}
-          {/* COLUMN 1 */}
-          <Grid item sm={8}>
-            <Grid container spacing={2} mb={1}>
-              {/* ITEM */}
-              <Grid item sm={12}>
-                <Card variant="elevation">
+        <Box sx={style}>
+          <Grid container spacing={2}>
+            {/* ROW 1 */}
+            {/* COLUMN 1 */}
+            <Grid item sm={8}>
+              <Grid container spacing={2} mb={1}>
+                {/* ITEM */}
+                <Grid item sm={12}>
                   <Box p={2}>
-                    <Typography variant="h2">{readStory?.story}</Typography>
+                    <Typography variant="h4">{readStory?.story}</Typography>
                   </Box>
-                </Card>
+                </Grid>
               </Grid>
             </Grid>
+            {/* COLUMN 2 */}
+            <Grid item sm={4}>
+              {/** USED SETTINGS */}
+              <Box>
+                <Box mb={2}>
+                  <Chip label="Prompt" size="small" />
+                  <Typography>{readStory?.promptText}</Typography>
+                </Box>
+                <Box mb={2}>
+                  <Chip label="Summary" size="small" />
+                  <Typography>{readStory?.summary}</Typography>
+                </Box>
+                <Box mb={2}>
+                  <Chip label="Total words" size="small" />
+                  <Typography>{readStory?.total_words}</Typography>
+                </Box>
+                <Chip label="Temperature (500)" size="small" />
+                <Chip label="Audience (Kids)" size="small" />
+              </Box>
+              {/** NEW SETTINGS */}
+              <Box>
+                <WrittingVariationsModal />
+              </Box>
+            </Grid>
           </Grid>
-          {/* COLUMN 2 */}
-          <Grid item sm={4}>
-            {/** USED SETTINGS */}
-            <Box>
-              <Box mb={2}>
-                <Chip label="Prompt" size="small" />
-                <Typography>{readStory?.promptText}</Typography>
-              </Box>
-              <Box mb={2}>
-                <Chip label="Summary" size="small" />
-                <Typography>{readStory?.summary}</Typography>
-              </Box>
-              <Box mb={2}>
-                <Chip label="Total words" size="small" />
-                <Typography>{readStory?.total_words}</Typography>
-              </Box>
-              <Chip label="Temperature (500)" size="small" />
-              <Chip label="Audience (Kids)" size="small" />
-            </Box>
-            {/** NEW SETTINGS */}
-            <Box>
-              <WrittingVariationsModal />
-            </Box>
-          </Grid>
-        </Grid>
+        </Box>
       </Modal>
       <Box position="relative" className="min-h-scree">
         <Box sx={{ position: "absolute", right: 2, top: 2 }}>
