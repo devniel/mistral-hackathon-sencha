@@ -12,6 +12,8 @@ MISTRAL_API_KEY = os.getenv('MISTRAL_API_KEY')
 MISTRAL_MODEL = "mistral-large-latest"
 AI_PROVIDER = os.getenv('AI_PROVIDER', 'openai')
 STABILITYAI_API_KEY = os.getenv('STABILITYAI_API_KEY')
+ELEVENLABS_API_KEY= os.getenv('ELEVENLABS_API_KEY')
+GROQ_API_KEY= os.getenv('GROQ_API_KEY')
 
 # Path to the Next.js renderer file
 PORT_BACKEND = int(os.getenv('PORT_BACKEND', 5000))

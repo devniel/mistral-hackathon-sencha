@@ -2,11 +2,11 @@ from constants import (
     AI_PROVIDER,
     StorySize,
 )
-from providers import mistral, openai
+from providers import mistral, openai, groq
 
 
 def summarizeStory(text, number_words, language="english"):
-    client = mistral if AI_PROVIDER == "mistral" else openai
+    client = mistral if AI_PROVIDER == "mistral" else (groq if AI_PROVIDER == "groq" else openai)
     content = text
     temperature = 0.7
     max_tokens = int(number_words / 0.6)

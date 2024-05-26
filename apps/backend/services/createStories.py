@@ -3,7 +3,7 @@ from constants import (
     AI_PROVIDER,
     StorySize,
 )
-from providers import mistral, openai
+from providers import mistral, openai, groq
 
 genre_list = [
     "fairy tale",
@@ -41,7 +41,7 @@ def createStories(
     genre=None,
     language="english",
 ):
-    client = mistral if AI_PROVIDER == "mistral" else openai
+    client = mistral if AI_PROVIDER == "mistral" else (groq if AI_PROVIDER == "groq" else openai)
 
     if genre and genre in genre_list:
         additional = genre_characteristics[genre]
