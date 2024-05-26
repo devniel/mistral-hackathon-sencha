@@ -2,7 +2,7 @@ import logging
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from utils.utils import encodeImage
-from services import createStory, summarizeStory, createStories, extendStory, toneStory
+from services import createStory, summarizeStory, createStories, extendStory, toneStory, generateStoryImage
 from constants import PORT_BACKEND, StorySize, story_size_mapper
 
 app = Flask(__name__)
@@ -32,23 +32,30 @@ def write():
         story_size = story_size_mapper.get(
             int(data.get("storySize", 1)), StorySize.SUMMARY
         ).value
-        print("STORY SIZE:" + str(story_size))
-        print("NUMBER WORDS:" + str(story_size*0.6))
         parameter3 = data.get("parameter3")
         switch1 = data.get("switch1")
         tone = data.get("tone")
         audience = data.get("audience")
-        genre = data.get("genre")
+        genre = data.get("genre", None)
+        language = data.get("language")
         stories = createStories(
             promptText,
             samples,
             temperature,
             number_words=int(story_size * 0.6),
             genre=genre,
+            language=language
         )
         stories_with_summaries = []
         for story in stories:
-            summary = summarizeStory(story, int(StorySize.SUMMARY.value * 0.6))
+            summary = summarizeStory(story, int(StorySize.SUMMARY.value * 0.6), language)
+            
+            if language != "english":
+                summary_en = summarizeStory(story, int(StorySize.SUMMARY.value * 0.6), "english")
+                image = generateStoryImage(summary_en)
+            else:
+                image = generateStoryImage(summary)
+                
             stories_with_summaries.append(
                 {
                     "story": story,
@@ -63,6 +70,8 @@ def write():
                     "tone": tone,
                     "audience": audience,
                     "genre": genre,
+                    "image": image,
+                    "language": language
                 }
             )
         return jsonify({"data": {"stories": stories_with_summaries}})
@@ -88,11 +97,19 @@ def extend():
         switch1 = data.get("switch1")
         tone = data.get("tone")
         audience = data.get("audience")
-        genre = data.get("genre")
+        genre = data.get("genre", None)
+        language = data.get("language")
         results = []
         for i in range(samples):
             extended = extendStory(story, total_words * 1.8)
-            extended_summarized = summarizeStory(extended, StorySize.SUMMARY.value)
+            extended_summarized = summarizeStory(extended, StorySize.SUMMARY.value, language)
+            
+            if language != "english":
+                summary_en = summarizeStory(extended, StorySize.SUMMARY.value, "english")
+                image = generateStoryImage(summary_en)
+            else:
+                image = generateStoryImage(extended_summarized)
+                
             results.append(
                 {
                     "story": extended,
@@ -107,6 +124,8 @@ def extend():
                     "tone": tone,
                     "audience": audience,
                     "genre": genre,
+                    "image": image,
+                    "language": language
                 }
             )
         return jsonify({"data": {"stories": results}})
@@ -132,16 +151,24 @@ def tone():
         parameter3 = data.get("parameter3")
         switch1 = data.get("switch1")
         audience = data.get("audience")
-        genre = data.get("genre")
+        genre = data.get("genre", None)
+        language = data.get("language")
         results = []
         for i in range(samples):
-            extended = toneStory(story, tone, total_words)
-            extended_summarized = summarizeStory(extended, StorySize.SUMMARY.value)
+            updated = toneStory(story, tone, total_words, language)
+            updated_summarized = summarizeStory(updated, StorySize.SUMMARY.value, language)
+            
+            if language != "english":
+                summary_en = summarizeStory(updated, StorySize.SUMMARY.value, "english")
+                image = generateStoryImage(summary_en)
+            else:
+                image = generateStoryImage(updated_summarized)
+                
             results.append(
                 {
-                    "story": extended,
-                    "summary": extended_summarized,
-                    "total_words": count_words(extended),
+                    "story": updated,
+                    "summary": updated_summarized,
+                    "total_words": count_words(updated),
                     "promptText": promptText,
                     "samples": samples,
                     "temperature": temperature * 10,
@@ -151,6 +178,8 @@ def tone():
                     "tone": tone,
                     "audience": audience,
                     "genre": genre,
+                    "image": image,
+                    "language": language
                 }
             )
         return jsonify({"data": {"stories": results}})
@@ -176,10 +205,18 @@ def summary():
         parameter3 = data.get("parameter3")
         switch1 = data.get("switch1")
         audience = data.get("audience")
-        genre = data.get("genre")
+        genre = data.get("genre", None)
+        language = data.get("language")
         results = []
         for i in range(samples):
-            summarized = summarizeStory(story, total_words * 0.5)
+            summarized = summarizeStory(story, total_words * 0.5, language)
+            
+            if language != "english":
+                summary_en = summarizeStory(story, total_words * 0.5, "english")
+                image = generateStoryImage(summary_en)
+            else:
+                image = generateStoryImage(summarized)
+                
             results.append(
                 {
                     "story": summarized,
@@ -194,6 +231,8 @@ def summary():
                     "tone": tone,
                     "audience": audience,
                     "genre": genre,
+                    "image": image,
+                    "language": language
                 }
             )
         return jsonify({"data": {"stories": results}})

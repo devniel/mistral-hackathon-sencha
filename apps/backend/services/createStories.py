@@ -34,7 +34,12 @@ def parseStories(text):
 
 
 def createStories(
-    topic, n_stories=3, temperature=0.7, number_words=(StorySize.SUMMARY.value * 0.6), genre=None
+    topic,
+    n_stories=3,
+    temperature=0.7,
+    number_words=(StorySize.SUMMARY.value * 0.6),
+    genre=None,
+    language="english",
 ):
     client = mistral if AI_PROVIDER == "mistral" else openai
 
@@ -55,12 +60,14 @@ def createStories(
             4. No more than {number_words} words.
 
             {additional}Make each story efficient, with vivid imagery, sensory details, profound themes to create captivating atmosphere.
+            The story should be in {language}
         """.format(
             topic=topic,
             number_words=number_words,
             n_stories=n_stories,
             genre=genre,
             additional=additional,
+            language=language
         ),
         temperature=temperature,
         max_tokens=int(number_words * n_stories / 0.6),

@@ -24,12 +24,14 @@ const storySizes = [
 
 export const WritingOptionsModal = ({ open, onChange, onClose }) => {
   const [temperature, setTemperature] = useState(7);
-  const [storySize, setStorySize] = useState(storySizes[1].value);
+  const [storySize, setStorySize] = useState(storySizes[2].value);
   const [parameter3, setParameter3] = useState(50);
   const [switch1, setSwitch1] = useState(false);
   const [tone, setTone] = useState("web");
   const [audience, setAudience] = useState(10);
-  const [genre, setGenre] = useState("fairy tale");
+  const [genre, setGenre] = useState("any");
+  const [language, setLanguage] = useState("english");
+
   const size = storySizes.find((size) => size.value === storySize).enumValue;
 
   const handleFormChange = () => {
@@ -41,13 +43,14 @@ export const WritingOptionsModal = ({ open, onChange, onClose }) => {
       tone,
       audience,
       genre,
+      language
     };
     onChange(formValues);
   };
 
   useEffect(() => {
     handleFormChange();
-  }, [temperature, storySize, parameter3, switch1, tone, audience, genre]);
+  }, [temperature, storySize, parameter3, switch1, tone, audience, genre, language]);
 
   useEffect(() => {
     handleFormChange();
@@ -60,8 +63,8 @@ export const WritingOptionsModal = ({ open, onChange, onClose }) => {
       sx={{
         width: "100%",
         display: open ? "block" : "none",
-        position: 'absolute',
-        zIndex: 3
+        position: "absolute",
+        zIndex: 3,
       }}
     >
       <Box display="flex" flexDirection="column" gap={2}>
@@ -125,6 +128,7 @@ export const WritingOptionsModal = ({ open, onChange, onClose }) => {
                     value={genre}
                     onChange={(e) => setGenre(e.target.value)}
                   >
+                    <MenuItem value={"any"}>any</MenuItem>
                     <MenuItem value={"fairy tale"}>Fairy tale</MenuItem>
                     <MenuItem value={"folktale"}>Folktale</MenuItem>
                     <MenuItem value={"adventure story"}>
@@ -135,6 +139,28 @@ export const WritingOptionsModal = ({ open, onChange, onClose }) => {
                     <MenuItem value={"futuristic story"}>
                       Futuristic story
                     </MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </Box>
+          {/** LANGUAGE */}
+          <Box>
+            <Grid container spacing={2}>
+              <Grid item sm={3}>
+                <Typography>Language</Typography>
+              </Grid>
+              <Grid item sm={9}>
+                <FormControl fullWidth>
+                  <Select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                  >
+                    <MenuItem value={"english"}>English</MenuItem>
+                    <MenuItem value={"french"}>French</MenuItem>
+                    <MenuItem value={"spanish"}>Spanish</MenuItem>
+                    <MenuItem value={"german"}>German</MenuItem>
+                    <MenuItem value={"italian"}>Italian</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>

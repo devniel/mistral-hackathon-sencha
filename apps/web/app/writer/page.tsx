@@ -108,7 +108,6 @@ export default function Page() {
   };
 
   const handleWritingOptionsChange = (formValues) => {
-    console.log("formValue:", formValues);
     setStorySettings(formValues);
   };
 
@@ -126,7 +125,8 @@ export default function Page() {
         story: story.story,
         temperature: story.temperature,
         genre: story.genere,
-        total_words: story.total_words
+        total_words: story.total_words,
+        language: story.language
       };
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/tone`,
@@ -150,6 +150,7 @@ export default function Page() {
             storySettings: {
               genere: payload.genre,
               temperature: payload.temperature,
+              language: payload.language
             },
             stories: result.data.stories,
           },
@@ -172,7 +173,8 @@ export default function Page() {
         story: story.story,
         temperature: story.temperature,
         genre: story.genere,
-        total_words: story.total_words
+        total_words: story.total_words,
+        language: story.language,
       };
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/extend`,
@@ -196,6 +198,7 @@ export default function Page() {
             storySettings: {
               genere: payload.genre,
               temperature: payload.temperature,
+              language: payload.language,
             },
             stories: result.data.stories,
           },
@@ -222,7 +225,8 @@ export default function Page() {
         story: story.story,
         temperature: story.temperature,
         genre: story.genere,
-        total_words: story.total_words
+        total_words: story.total_words,
+        language: story.language,
       };
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/summary`,
@@ -246,6 +250,7 @@ export default function Page() {
             storySettings: {
               genere: payload.genre,
               temperature: payload.temperature,
+              language: payload.language,
             },
             stories: result.data.stories,
           },
@@ -267,6 +272,7 @@ export default function Page() {
         promptText: story.promptText,
         temperature: story.temperature,
         genre: story.genere,
+        language: story.language,
       };
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/write`,
@@ -326,6 +332,9 @@ export default function Page() {
         }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        sx={{
+          maxHeight: "100vh"
+        }}
       >
         <Box sx={style}>
           <Grid container spacing={2}>
@@ -334,6 +343,7 @@ export default function Page() {
             <Grid item sm={2} position="relative">
               {/** USED SETTINGS */}
               <Box position="relative">
+                <img src={readStory?.image} style={{ borderRadius: 10, marginBottom: '10px' }} />
                 <Box mb={2}>
                   <Typography
                     sx={{ fontSize: 14 }}
@@ -396,18 +406,18 @@ export default function Page() {
                 </Box>
               </Box>
             </Grid>
-            {/* COLUMN 1 */}
+            {/* COLUMN 2 */}
             <Grid item sm={7}>
               <Grid container spacing={2} mb={1}>
                 {/* ITEM */}
                 <Grid item sm={12}>
-                  <Box p={2}>
+                  <Box p={2} maxHeight="500px" overflow="auto">
                     <Typography variant="h4">{readStory?.story}</Typography>
                   </Box>
                 </Grid>
               </Grid>
             </Grid>
-            {/* COLUMN 2 */}
+            {/* COLUMN 3 */}
             <Grid
               item
               sm={3}
@@ -528,6 +538,7 @@ export default function Page() {
                     <Grid item sm={3} key={uuidv4()}>
                       <Card variant="elevation">
                         <CardContent>
+                          <img src={story.image} />
                           <Typography
                             sx={{ fontSize: 14 }}
                             color="text.secondary"
