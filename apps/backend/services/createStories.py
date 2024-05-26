@@ -3,6 +3,9 @@ import re
 from mistralai.client import MistralClient
 from mistralai.models.chat_completion import ChatMessage
 from constants import MISTRAL_API_KEY, MISTRAL_MODEL, StorySize
+from groq import Groq
+
+groq_api_key = "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"
 
 genre_list = ["fairy tale","folktale","fable","adventure story", "humorous story", "mystery story", "futuristic story"]
 
@@ -32,7 +35,7 @@ def parseStories(text):
     stories = [story.strip() for story in stories]
     return stories
 
-def createStories(topic, n_stories=3, temperature=0.7, size=StorySize.VERY_SHORT,genre=None, tone=None):
+def createStories(topic, n_stories=4, temperature=0.7, size=StorySize.VERY_SHORT,genre=None, tone=None):
     client = MistralClient(api_key=MISTRAL_API_KEY)
     number_words = int(size.value * 3 / 5)
 
@@ -49,26 +52,35 @@ def createStories(topic, n_stories=3, temperature=0.7, size=StorySize.VERY_SHORT
     else:
         tone = ""
 
-    chat_response = client.chat(
-        model=MISTRAL_MODEL,
-        messages=[
-            ChatMessage(role="system", content="You're a very gifted storyteller."),
-            ChatMessage(
-                role="user",
-                content="""
-                    Propose {n_stories}{tone}{genre} stories between tags '<story>' '</story>' about {topic} in {number_words} words.
-                    Ensure each story has:
-                    1. A different setting.
-                    2. Unique characters with specific traits.
-                    3. Distinct plot twists or endings.
+    system_prompt = "You're a very gifted storyteller."
+    user_prompt = """Propose {n_stories}{tone}{genre} stories between tags '<story>' '</story>' about {topic} in {number_words} words.
+                Ensure each story has:
+                1. A different setting.
+                2. Unique characters with specific traits.
+                3. Distinct plot twists or endings.
 
-                    {additional}Make each story efficient, with vivid imagery, sensory details, profound themes to create captivating atmosphere.
-                """.format(
-                        topic=topic, number_words=number_words, n_stories=n_stories,genre=genre,additional=additional
-                    ),
-            ),
-        ],
-        temperature=temperature,
-        max_tokens=3 * size.value,
-    )
+                {additional}Make each story efficient, with vivid imagery, sensory details, profound themes to create captivating atmosphere.
+            """.format(
+                    topic=topic, number_words=number_words, n_stories=n_stories,genre=genre,additional=additional
+                )
+
+    if backend == "mistral":
+        chat_response = client.chat(
+            model=MISTRAL_MODEL,
+            messages=[
+                ChatMessage(role="system", content=system_prompt),
+                ChatMessage(role="user",content=user_prompt,
+                ),
+            ],
+            temperature=temperature,
+            max_tokens=n_stories * size.value,
+        )
+    elif backend == "groq":
+        client = Groq(api_key=groq_api_key)
+        chat_response = client.chat.completions.create(
+        messages=[
+            {"role":"system", "content":system_prompt},
+            {"role": "user", "content":user_prompt}],
+        model="mixtral-8x7b-32768",
+        max_tokens=n_stories * size)
     return parseStories(chat_response.choices[0].message.content)
