@@ -7,8 +7,10 @@ load_dotenv()
 
 # OpenAI API key
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+OPENAI_MODEL = os.getenv('OPENAI_MODEL')
 MISTRAL_API_KEY = os.getenv('MISTRAL_API_KEY')
 MISTRAL_MODEL = "mistral-large-latest"
+AI_PROVIDER = os.getenv('AI_PROVIDER', 'openai')
 
 # Path to the Next.js renderer file
 PORT_BACKEND = int(os.getenv('PORT_BACKEND', 5000))
@@ -23,8 +25,8 @@ HEADERS = {
 # Size in tokens: 100 tokens ~= 75 words
 from enum import Enum
 class StorySize(Enum):
-    HAIKU = 30
-    SUMMARY = 60
+    HAIKU = 10
+    SUMMARY = 30
     VERY_SHORT = 350
     SHORT_STORY = 600
     FULL_STORY = 2000

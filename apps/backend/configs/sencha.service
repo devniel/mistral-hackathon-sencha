@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn instance to server sencha
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+Environment="PATH=/home/ubuntu/.local/bin"
+WorkingDirectory=/home/ubuntu/mistral-hackathon-sencha/apps/backend
+ExecStart=/home/ubuntu/.local/bin/poetry run gunicorn --workers 3 --bind 0.0.0.0:5000 server:app
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

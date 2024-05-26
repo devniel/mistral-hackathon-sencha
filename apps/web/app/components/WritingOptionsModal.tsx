@@ -11,6 +11,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  Modal,
 } from "@mui/material";
 
 const storySizes = [
@@ -21,7 +22,7 @@ const storySizes = [
   { value: 4, label: "Large", enumValue: "FULL_STORY" },
 ];
 
-export const WritingOptionsModal = ({ onChange }) => {
+export const WritingOptionsModal = ({ open, onChange, onClose }) => {
   const [temperature, setTemperature] = useState(7);
   const [storySize, setStorySize] = useState(storySizes[1].value);
   const [parameter3, setParameter3] = useState(50);
@@ -48,172 +49,96 @@ export const WritingOptionsModal = ({ onChange }) => {
     handleFormChange();
   }, [temperature, storySize, parameter3, switch1, tone, audience, genre]);
 
+  useEffect(() => {
+    handleFormChange();
+  }, []);
+
   return (
-    <Paper elevation={1} className="mt-2 p-5">
+    <Paper
+      elevation={1}
+      className="mt-2 p-5"
+      sx={{
+        width: "100%",
+        display: open ? "block" : "none",
+        position: 'absolute',
+        zIndex: 3
+      }}
+    >
       <Box display="flex" flexDirection="column" gap={2}>
-        <Box
-          p={2}
-          sx={{
-            border: "1px solid #eee",
-            borderRadius: 2,
-          }}
-        >
-          <Typography mb={2} variant="subtitle2">
-            Variants
-          </Typography>
-          <Box display="flex" flexDirection="column" gap={2}>
-            <Box>
-              <Grid container spacing={2}>
-                <Grid item sm={3}>
-                  <Typography>Temperature</Typography>
-                </Grid>
-                <Grid item sm={9}>
-                  <Slider
-                    value={temperature}
-                    onChange={(e, newValue) => setTemperature(newValue as any)}
-                    aria-label="Temperature"
-                    valueLabelDisplay="auto"
-                    step={1}
-                    min={0}
-                    max={10}
-                  />
-                </Grid>
+        <Box display="flex" flexDirection="column" gap={2}>
+          <Box>
+            <Grid container spacing={2}>
+              <Grid item sm={3}>
+                <Typography>Temperature</Typography>
               </Grid>
-            </Box>
-            <Box>
-              <Grid container spacing={2}>
-                <Grid item sm={3}>
-                  <Typography>Size</Typography>
-                </Grid>
-                <Grid item sm={9}>
-                  <Slider
-                    value={storySize}
-                    onChange={(e, newValue) => setStorySize(newValue as any)}
-                    step={1}
-                    marks={storySizes}
-                    min={0}
-                    max={4}
-                    valueLabelDisplay="auto"
-                  />
-                </Grid>
+              <Grid item sm={9}>
+                <Slider
+                  value={temperature}
+                  onChange={(e, newValue) => setTemperature(newValue as any)}
+                  aria-label="Temperature"
+                  valueLabelDisplay="auto"
+                  step={1}
+                  min={0}
+                  max={10}
+                />
               </Grid>
-            </Box>
-            <Box>
-              <Grid container spacing={2}>
-                <Grid item sm={3}>
-                  <Typography>Parameter 3</Typography>
-                </Grid>
-                <Grid item sm={9}>
-                  <Slider
-                    value={parameter3}
-                    onChange={(e, newValue) => setParameter3(newValue as any)}
-                    aria-label="Parameter 3"
-                    valueLabelDisplay="auto"
-                    step={1}
-                    min={0}
-                    max={100}
-                  />
-                </Grid>
-              </Grid>
-            </Box>
+            </Grid>
           </Box>
-        </Box>
-
-        <Box
-          p={2}
-          sx={{
-            border: "1px solid #eee",
-            borderRadius: 2,
-          }}
-        >
-          <Typography mb={2} variant="subtitle2">
-            More options
-          </Typography>
-
-          <Box display="flex" flexDirection="column" gap={2}>
-            <Box>
-              <Grid container spacing={2}>
-                <Grid item sm={3}>
-                  <Typography>Switch 1</Typography>
-                </Grid>
-                <Grid item sm={9}>
-                  <Switch
-                    checked={switch1}
-                    onChange={(e) => setSwitch1(e.target.checked)}
-                  />
-                </Grid>
+          <Box>
+            <Grid container spacing={2}>
+              <Grid
+                item
+                sm={3}
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+              >
+                <Typography>Size</Typography>
               </Grid>
-            </Box>
-            <Box>
-              <Grid container spacing={2}>
-                <Grid item sm={3}>
-                  <Typography>Tone</Typography>
-                </Grid>
-                <Grid item sm={9}>
-                  <ToggleButtonGroup
-                    color="primary"
-                    value={tone}
-                    exclusive
-                    onChange={(e, newTone) => setTone(newTone)}
-                    aria-label="Tone"
+              <Grid item sm={9}>
+                <ToggleButtonGroup
+                  fullWidth
+                  color="primary"
+                  value={storySize}
+                  exclusive
+                  onChange={(e, size) => setStorySize(size)}
+                  aria-label="Size"
+                >
+                  <ToggleButton value={0}>XS</ToggleButton>
+                  <ToggleButton value={1}>S</ToggleButton>
+                  <ToggleButton value={2}>M</ToggleButton>
+                  <ToggleButton value={3}>L</ToggleButton>
+                  <ToggleButton value={4}>XL</ToggleButton>
+                </ToggleButtonGroup>
+              </Grid>
+            </Grid>
+          </Box>
+          {/** GENRE */}
+          <Box>
+            <Grid container spacing={2}>
+              <Grid item sm={3}>
+                <Typography>Genre</Typography>
+              </Grid>
+              <Grid item sm={9}>
+                <FormControl fullWidth>
+                  <Select
+                    value={genre}
+                    onChange={(e) => setGenre(e.target.value)}
                   >
-                    <ToggleButton value="web">Web</ToggleButton>
-                    <ToggleButton value="android">Android</ToggleButton>
-                    <ToggleButton value="ios">iOS</ToggleButton>
-                  </ToggleButtonGroup>
-                </Grid>
+                    <MenuItem value={"fairy tale"}>Fairy tale</MenuItem>
+                    <MenuItem value={"folktale"}>Folktale</MenuItem>
+                    <MenuItem value={"adventure story"}>
+                      Adventure story
+                    </MenuItem>
+                    <MenuItem value={"humorous story"}>Humorous story</MenuItem>
+                    <MenuItem value={"mystery story"}>Mystery story</MenuItem>
+                    <MenuItem value={"futuristic story"}>
+                      Futuristic story
+                    </MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
-            </Box>
-            <Box>
-              <Grid container spacing={2}>
-                <Grid item sm={3}>
-                  <Typography>Audience</Typography>
-                </Grid>
-                <Grid item sm={9}>
-                  <FormControl fullWidth>
-                    <Select
-                      value={audience}
-                      onChange={(e) => setAudience(e.target.value as any)}
-                    >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </Box>
-            {/** GENRE */}
-            <Box>
-              <Grid container spacing={2}>
-                <Grid item sm={3}>
-                  <Typography>Genre</Typography>
-                </Grid>
-                <Grid item sm={9}>
-                  <FormControl fullWidth>
-                    <Select
-                      value={genre}
-                      onChange={(e) => setGenre(e.target.value)}
-                    >
-                      <MenuItem value={"fairy tale"}>Fairy tale</MenuItem>
-                      <MenuItem value={"folktale"}>Folktale</MenuItem>
-                      <MenuItem value={"adventure story"}>
-                        Adventure story
-                      </MenuItem>
-                      <MenuItem value={"humorous story"}>
-                        Humorous story
-                      </MenuItem>
-                      <MenuItem value={"mystery story"}>
-                        Mystery story
-                      </MenuItem>
-                      <MenuItem value={"futuristic story"}>
-                        Futuristic story
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </Box>
+            </Grid>
           </Box>
         </Box>
       </Box>

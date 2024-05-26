@@ -1,14 +1,14 @@
 import random
 from mistralai.client import MistralClient
 from mistralai.models.chat_completion import ChatMessage
-from constants import MISTRAL_API_KEY, MISTRAL_MODEL
+from constants import MISTRAL_API_KEY, MISTRAL_MODEL, StorySize
 
 def createStory(text):
     client = MistralClient(api_key=MISTRAL_API_KEY)
     n_answers = 10
     # Size in tokens: 100 tokens ~= 75 words
     haiku = 30
-    summary_size = 100
+    summary_size = StorySize.SUMMARY
     very_short = 350
     short_story = 600
     full_story = 2000
