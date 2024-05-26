@@ -30,9 +30,9 @@ from enum import Enum
 class StorySize(Enum):
     HAIKU = 10
     SUMMARY = 30
-    VERY_SHORT = 350
-    SHORT_STORY = 600
-    FULL_STORY = 2000
+    VERY_SHORT = 200
+    SHORT_STORY = 350
+    FULL_STORY = 500
 
 story_size_mapper = {
     0: StorySize.HAIKU,
