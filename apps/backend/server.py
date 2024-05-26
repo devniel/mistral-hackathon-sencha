@@ -1,9 +1,12 @@
 import logging
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from utils.utils import encodeImage
 from services import createStory, summarizeStory, createStories, extendStory, toneStory, generateStoryImage
-from constants import PORT_BACKEND, StorySize, story_size_mapper
+from constants import PORT_BACKEND, StorySize, story_size_mapper, ELEVENLABS_API_KEY
+import tempfile
+from elevenlabs.client import ElevenLabs
+from io import BytesIO
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -239,6 +242,39 @@ def summary():
     except Exception as e:
         logger.error(f"Error processing the image: {e}")
         return jsonify({"error": "Failed to process the image"}), 500
+
+@app.route('/audio', methods=['POST'])
+def generate_audio():
+    data = request.json
+    text_to_generate = data.get('story')
+
+    if not text_to_generate:
+        return jsonify({'error': 'No text provided'}), 400
+
+    try:
+        client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
+        audio_generator = client.generate(
+            text=text_to_generate,
+            voice="Rachel",
+            model="eleven_multilingual_v2"
+        )
+
+        # Convert the generator output to bytes
+        audio_bytes = BytesIO()
+        for chunk in audio_generator:
+            audio_bytes.write(chunk)
+        audio_bytes.seek(0)
+
+        # Create a temporary file to save the audio data
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+        temp_file.write(audio_bytes.read())
+        temp_file.close()
+
+        # Send the file to the client
+        return send_file(temp_file.name, as_attachment=True, download_name='generated_audio.mp3', mimetype='audio/mpeg')
+
+    except Exception as e:
+        return jsonify({'error': 'An error occurred', 'details': str(e)}), 500
 
 
 if __name__ == "__main__":

@@ -126,7 +126,7 @@ export default function Page() {
         temperature: story.temperature,
         genre: story.genere,
         total_words: story.total_words,
-        language: story.language
+        language: story.language,
       };
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/tone`,
@@ -150,7 +150,7 @@ export default function Page() {
             storySettings: {
               genere: payload.genre,
               temperature: payload.temperature,
-              language: payload.language
+              language: payload.language,
             },
             stories: result.data.stories,
           },
@@ -212,9 +212,7 @@ export default function Page() {
     }
   };
 
-  const handleOnRemix = (story) => {
-
-  };
+  const handleOnRemix = (story) => {};
 
   const handleOnSummary = async (story) => {
     setLoading(true);
@@ -322,6 +320,41 @@ export default function Page() {
     p: 4,
   };
 
+  const [audioUrl, setAudioUrl] = useState<string>();
+
+  const generateAndPlayAudio = async (story) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/audio`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            story,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      setAudioUrl(audioUrl);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    } catch (error) {
+      console.error("Error generating audio", error);
+    } finally {
+    }
+  };
+
+  const play = (story) => {
+    generateAndPlayAudio(story);
+  };
+
   return (
     <>
       {/** SELECTED STORY */}
@@ -333,7 +366,7 @@ export default function Page() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         sx={{
-          maxHeight: "100vh"
+          maxHeight: "100vh",
         }}
       >
         <Box sx={style}>
@@ -343,7 +376,10 @@ export default function Page() {
             <Grid item sm={2} position="relative">
               {/** USED SETTINGS */}
               <Box position="relative">
-                <img src={readStory?.image} style={{ borderRadius: 10, marginBottom: '10px' }} />
+                <img
+                  src={readStory?.image}
+                  style={{ borderRadius: 10, marginBottom: "10px" }}
+                />
                 <Box mb={2}>
                   <Typography
                     sx={{ fontSize: 14 }}
@@ -409,6 +445,7 @@ export default function Page() {
             {/* COLUMN 2 */}
             <Grid item sm={7}>
               <Grid container spacing={2} mb={1}>
+                <Button onClick={() => play(readStory?.story)}>PLAY</Button>
                 {/* ITEM */}
                 <Grid item sm={12}>
                   <Box p={2} maxHeight="500px" overflow="auto">
