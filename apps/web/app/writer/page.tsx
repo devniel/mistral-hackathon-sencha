@@ -513,6 +513,12 @@ export default function Page() {
           onChange={handleWritingOptionsChange}
           onClose={() => setOpenWrittingOptionsModal(false)}
         />
+        <Button
+        size="small"
+        onClick={sendPrompt}
+      >
+        Generate story
+      </Button>
       </Box>
       {/** LOADING VIEW */}
       {loading && (
