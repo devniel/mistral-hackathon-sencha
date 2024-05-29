@@ -249,9 +249,8 @@ export default function Example() {
                   Compose stories
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-gray-600">
-                  Start a new writing, iterate faster over it, change details
-                  line by line, expand or summarize sections, change the tone or
-                  do a remix with Sencha 🌱.
+                  Create a new story from scratch in an instant. Pick from three options which you prefer the most. Have Sencha develop your preferred choice to a story length of your choice. Then, when you're ready, have our AI read it to you in a voice of your choice. Then, you can change the tone or
+                  do a remix of your story with Sencha 🌱.
                 </p>
                 <div className="mt-10 flex items-center justify-center gap-x-6">
                   <a
