@@ -2,7 +2,14 @@ import logging
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from utils.utils import encodeImage
-from services import createStory, summarizeStory, createStories, extendStory, toneStory, generateStoryImage
+from services import (
+    createStory,
+    summarizeStory,
+    createStories,
+    extendStory,
+    toneStory,
+    generateStoryImage,
+)
 from constants import PORT_BACKEND, StorySize, story_size_mapper, ELEVENLABS_API_KEY
 import tempfile
 from elevenlabs.client import ElevenLabs
@@ -47,18 +54,22 @@ def write():
             temperature,
             number_words=int(story_size * 0.6),
             genre=genre,
-            language=language
+            language=language,
         )
         stories_with_summaries = []
         for story in stories:
-            summary = summarizeStory(story, int(StorySize.SUMMARY.value * 0.6), language)
-            
+            summary = summarizeStory(
+                story, int(StorySize.SUMMARY.value * 0.6), language
+            )
+
             if language != "english":
-                summary_en = summarizeStory(story, int(StorySize.SUMMARY.value * 0.6), "english")
+                summary_en = summarizeStory(
+                    story, int(StorySize.SUMMARY.value * 0.6), "english"
+                )
                 image = generateStoryImage(summary_en)
             else:
                 image = generateStoryImage(summary)
-                
+
             stories_with_summaries.append(
                 {
                     "story": story,
@@ -74,13 +85,13 @@ def write():
                     "audience": audience,
                     "genre": genre,
                     "image": image,
-                    "language": language
+                    "language": language,
                 }
             )
         return jsonify({"data": {"stories": stories_with_summaries}})
     except Exception as e:
-        logger.error(f"Error processing the image: {e}")
-        return jsonify({"error": "Failed to process the image"}), 500
+        logger.error(f"Error processing the request for /write: {e}")
+        return jsonify({"error": "Error processing the request for /write"}), 500
 
 
 @app.route("/extend", methods=["POST"])
@@ -105,14 +116,18 @@ def extend():
         results = []
         for i in range(samples):
             extended = extendStory(story, total_words * 1.8)
-            extended_summarized = summarizeStory(extended, StorySize.SUMMARY.value, language)
-            
+            extended_summarized = summarizeStory(
+                extended, StorySize.SUMMARY.value, language
+            )
+
             if language != "english":
-                summary_en = summarizeStory(extended, StorySize.SUMMARY.value, "english")
+                summary_en = summarizeStory(
+                    extended, StorySize.SUMMARY.value, "english"
+                )
                 image = generateStoryImage(summary_en)
             else:
                 image = generateStoryImage(extended_summarized)
-                
+
             results.append(
                 {
                     "story": extended,
@@ -128,13 +143,13 @@ def extend():
                     "audience": audience,
                     "genre": genre,
                     "image": image,
-                    "language": language
+                    "language": language,
                 }
             )
         return jsonify({"data": {"stories": results}})
     except Exception as e:
-        logger.error(f"Error processing the image: {e}")
-        return jsonify({"error": "Failed to process the image"}), 500
+        logger.error(f"Error processing request for /extend: {e}")
+        return jsonify({"error": "Error processing request for /extend"}), 500
 
 
 @app.route("/tone", methods=["POST"])
@@ -159,14 +174,16 @@ def tone():
         results = []
         for i in range(samples):
             updated = toneStory(story, tone, total_words, language)
-            updated_summarized = summarizeStory(updated, StorySize.SUMMARY.value, language)
-            
+            updated_summarized = summarizeStory(
+                updated, StorySize.SUMMARY.value, language
+            )
+
             if language != "english":
                 summary_en = summarizeStory(updated, StorySize.SUMMARY.value, "english")
                 image = generateStoryImage(summary_en)
             else:
                 image = generateStoryImage(updated_summarized)
-                
+
             results.append(
                 {
                     "story": updated,
@@ -182,13 +199,13 @@ def tone():
                     "audience": audience,
                     "genre": genre,
                     "image": image,
-                    "language": language
+                    "language": language,
                 }
             )
         return jsonify({"data": {"stories": results}})
     except Exception as e:
-        logger.error(f"Error processing the image: {e}")
-        return jsonify({"error": "Failed to process the image"}), 500
+        logger.error(f"Error processing request for /tone: {e}")
+        return jsonify({"error": "Error processing request for /tone"}), 500
 
 
 @app.route("/summary", methods=["POST"])
@@ -213,13 +230,13 @@ def summary():
         results = []
         for i in range(samples):
             summarized = summarizeStory(story, total_words * 0.5, language)
-            
+
             if language != "english":
                 summary_en = summarizeStory(story, total_words * 0.5, "english")
                 image = generateStoryImage(summary_en)
             else:
                 image = generateStoryImage(summarized)
-                
+
             results.append(
                 {
                     "story": summarized,
@@ -235,28 +252,30 @@ def summary():
                     "audience": audience,
                     "genre": genre,
                     "image": image,
-                    "language": language
+                    "language": language,
                 }
             )
         return jsonify({"data": {"stories": results}})
     except Exception as e:
-        logger.error(f"Error processing the image: {e}")
-        return jsonify({"error": "Failed to process the image"}), 500
+        logger.error(f"Error processing the request for /summary: {e}")
+        return jsonify({"error": "Error processing the request for /summary"}), 500
 
-@app.route('/audio', methods=['POST'])
+
+@app.route("/audio", methods=["POST"])
 def generate_audio():
     data = request.json
-    text_to_generate = data.get('story')
+    text_to_generate = data.get("story")
 
     if not text_to_generate:
-        return jsonify({'error': 'No text provided'}), 400
+        return jsonify({"error": "No text provided"}), 400
 
     try:
         client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
         audio_generator = client.generate(
             text=text_to_generate,
-            voice="Rachel",
-            model="eleven_multilingual_v2"
+            # voice="Rachel",
+            voice_id="ZjNDpMjI2dFTWugLRT4G",
+            model="eleven_multilingual_v2",
         )
 
         # Convert the generator output to bytes
@@ -271,10 +290,15 @@ def generate_audio():
         temp_file.close()
 
         # Send the file to the client
-        return send_file(temp_file.name, as_attachment=True, download_name='generated_audio.mp3', mimetype='audio/mpeg')
+        return send_file(
+            temp_file.name,
+            as_attachment=True,
+            download_name="generated_audio.mp3",
+            mimetype="audio/mpeg",
+        )
 
     except Exception as e:
-        return jsonify({'error': 'An error occurred', 'details': str(e)}), 500
+        return jsonify({"error": "Error processing the request for /audio", "details": str(e)}), 500
 
 
 if __name__ == "__main__":

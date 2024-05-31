@@ -42,7 +42,6 @@ def generateStoryImage(storySummary):
 
   data = response.json()
   imageUri = data["artifacts"][0]["base64"]
-  print(data)
   return f"data:image/jpeg;base64,{imageUri}"
     
     
